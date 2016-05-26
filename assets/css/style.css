@@ -6,9 +6,11 @@
 body{
     padding: 0;
     margin: 0;
+    font-family: sans-serif;
 }
 
 #maze{
+    font-family: serif;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -18,4 +20,11 @@ body{
     font-size: 10px;
     text-align: center;
     overflow: hidden;
+}
+
+.action-container {
+    border: 1px solid lightgray;
+    width: 25%;
+    margin: 1em;
+    padding: 0 0.5em;
 }

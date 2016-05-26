@@ -66,7 +66,7 @@ function generateMaze(mazeWidth, mazeHeight) {
  * @param maze (Array) : an array of cells with down and right parameters
  * @returns (String) : a json representation of the maze
  */
-function printResults(mazeWidth, mazeHeight, maze){
+function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle){
     var result = "";
 
     result += "<table>";
@@ -86,6 +86,19 @@ function printResults(mazeWidth, mazeHeight, maze){
 
     // Show maze
     $("#maze").html(result);
+
+    $("#maze table").css({
+        "table-layout": "fixed",
+        "border-collapse": "collapse",
+        "border": "1px solid black"
+    });
+    $("#maze table td").css({
+        "position": "relative",
+        "overflow": "hidden",
+        "width": cellsSizeStyle + "px",
+        "height": cellsSizeStyle + "px"
+    });
+
     // Return json string
     return exportJson(mazeWidth, mazeHeight, maze);
 }
@@ -129,6 +142,41 @@ function downloadJson(jsonExportString){
 }
 
 /**
+ * Import Json Maze
+ *
+ * @param jsonImportString
+ * @param cellsSizeStyle
+ */
+function importJson(jsonImportString,cellsSizeStyle){
+    var mazeJson = JSON.parse(jsonImportString);
+    return printResults(mazeJson['width'], mazeJson['height'], mazeJson['cells'],cellsSizeStyle);
+}
+
+/**
+ * Upload Json File and import it
+ *
+ * @param cellsSizeStyle
+ */
+function uploadJson(cellsSizeStyle)
+{
+    var file = document.getElementById('file-upload');
+
+    if(file.files.length)
+    {
+        var reader = new FileReader();
+
+        reader.onload = function(e)
+        {
+            document.getElementById('import').innerHTML = e.target.result;
+            importJson(e.target.result,cellsSizeStyle);
+        };
+
+        reader.readAsBinaryString(file.files[0]);
+
+    }
+}
+
+/**
  * Download tool
  *
  * @param content
@@ -146,7 +194,6 @@ function download(content, filename, contentType)
 }
 
 
-
 $(document).ready(function () {
     var cellsSizeStyle = 20;
     var mazeWith = 30;
@@ -156,19 +203,16 @@ $(document).ready(function () {
     var mazeArray = generateMaze(mazeWith,mazeHeight);
 
     // Prints results and get json representation
-    var mazeJson = printResults(mazeWith,mazeHeight,mazeArray);
+    var mazeJson = printResults(mazeWith,mazeHeight,mazeArray,cellsSizeStyle);
 
-    $("#download-export").click(function(){downloadJson(mazeJson)});
-
-    $("#maze table").css({
-        "table-layout": "fixed",
-        "border-collapse": "collapse",
-        "border": "1px solid black"
+    $("#download-json").click(function(){
+        downloadJson(mazeJson)
     });
-    $("#maze table td").css({
-        "position": "relative",
-        "overflow": "hidden",
-        "width": cellsSizeStyle + "px",
-        "height": cellsSizeStyle + "px"
+    $("#import-json").click(function(){
+        var jsonStringToImport = $("#import").val();
+        importJson(jsonStringToImport,cellsSizeStyle);
+    });
+    $("#upload-json").click(function(){
+        uploadJson(cellsSizeStyle);
     });
 });

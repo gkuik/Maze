@@ -9,12 +9,28 @@
 
 <div id="maze"></div>
 
-<h3>Export maze : <button id="download-export">Download .json</button></h3>
-<textarea id="export"></textarea>
+<div class="action-container" id="export-container">
+    <h3>Export maze : </h3>
+    <textarea id="export"></textarea>
+    <br>
+    <h3>or <button id="download-json">Download .json</button></h3>
+</div>
 
-<h3>Upload or import maze : <button id="upload-json">Upload .json</button></h3>
-<textarea id="import"></textarea>
-<button id="import-json">Import</button>
+<div class="action-container" id="import-container">
+    <h3>Import maze : </h3>
+    <textarea id="import"></textarea>
+    <p><button id="import-json">Import</button></p>
+    <h3>or upload .json</h3>
+    <form>
+        <p><input type="file" id="file-upload"></p>
+        <p><button type="button" id="upload-json">Upload</button></p>
+    </form>
+</div>
+
+<div class="action-container" id="solve-container">
+    <h3><s>Solve Maze :</s></h3>
+    <p><button id="solve-maze" disabled><s>Solve Maze</s></button></p>
+</div>
 
 <script src="assets/js/jquery-2.2.4.min.js"></script>
 <script src="assets/js/main.js"></script>
