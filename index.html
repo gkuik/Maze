@@ -9,27 +9,53 @@
 
 <div id="maze"></div>
 
-<div class="action-container" id="export-container">
-    <h3>Export maze : </h3>
-    <textarea id="export"></textarea>
-    <br>
-    <h3>or <button id="download-json">Download .json</button></h3>
+<div class="panel panel-left">
+    <div class="action-container" id="export-container">
+        <h3>Export maze : </h3>
+        <textarea id="export"></textarea>
+        <br>
+        <h3>or <button id="download-json">Download .json</button></h3>
+    </div>
+
+    <div class="action-container" id="import-container">
+        <h3>Import maze : </h3>
+        <textarea id="import"></textarea>
+        <p><button id="import-json">Import</button></p>
+        <h3>or upload .json</h3>
+        <form>
+            <p><input type="file" id="file-upload"></p>
+            <p><button type="button" id="upload-json">Upload</button></p>
+        </form>
+    </div>
 </div>
 
-<div class="action-container" id="import-container">
-    <h3>Import maze : </h3>
-    <textarea id="import"></textarea>
-    <p><button id="import-json">Import</button></p>
-    <h3>or upload .json</h3>
-    <form>
-        <p><input type="file" id="file-upload"></p>
-        <p><button type="button" id="upload-json">Upload</button></p>
-    </form>
-</div>
+<div class="panel panel-right">
 
-<div class="action-container" id="solve-container">
-    <h3><s>Solve Maze :</s></h3>
-    <p><button id="solve-maze" disabled><s>Solve Maze</s></button></p>
+    <div class="action-container" id="generate-container">
+        <h3>Generate New Maze :</h3>
+        <form>
+            <fieldset>
+                <legend>Options</legend>
+
+                <label for="options-width">Width : </label>
+                <input id="options-width" type="number" value="30">
+
+                <label for="options-height">Height : </label>
+                <input id="options-height" type="number" value="30">
+
+                <label for="options-viewport">Adapt to viewport : </label>
+                <input id="options-viewport" type="checkbox">
+            </fieldset>
+            <p><button id="generate-maze" type="button">Generate Maze</button></p>
+        </form>
+
+    </div>
+
+    <div class="action-container" id="solve-container">
+        <h3><s>Solve Maze :</s></h3>
+        <p><button id="solve-maze" disabled><s>Solve Maze</s></button></p>
+    </div>
+
 </div>
 
 <script src="assets/js/jquery-2.2.4.min.js"></script>

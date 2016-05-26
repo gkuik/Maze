@@ -68,6 +68,7 @@ function generateMaze(mazeWidth, mazeHeight) {
  */
 function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle){
     var result = "";
+    var adapt = $('#options-viewport').is(':checked');
 
     result += "<table>";
     for (var r = 0; r < mazeHeight; r++) {
@@ -92,12 +93,22 @@ function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle){
         "border-collapse": "collapse",
         "border": "1px solid black"
     });
-    $("#maze table td").css({
-        "position": "relative",
-        "overflow": "hidden",
-        "width": cellsSizeStyle + "px",
-        "height": cellsSizeStyle + "px"
-    });
+
+    if(adapt == true) {
+        $("#maze table td").css({
+            "position": "relative",
+            "overflow": "hidden",
+            "width": 50/mazeWidth + "vw",
+            "lineHeight": 50/mazeHeight*1.5 + "vh"
+        });
+    } else {
+        $("#maze table td").css({
+            "position": "relative",
+            "overflow": "hidden",
+            "width": cellsSizeStyle + "px",
+            "height": cellsSizeStyle + "px"
+        });
+    }
 
     // Return json string
     return exportJson(mazeWidth, mazeHeight, maze);
@@ -196,14 +207,14 @@ function download(content, filename, contentType)
 
 $(document).ready(function () {
     var cellsSizeStyle = 20;
-    var mazeWith = 30;
+    var mazeWidth = 30;
     var mazeHeight = 30;
 
     // Generate a new maze
-    var mazeArray = generateMaze(mazeWith,mazeHeight);
+    var mazeArray = generateMaze(mazeWidth,mazeHeight);
 
     // Prints results and get json representation
-    var mazeJson = printResults(mazeWith,mazeHeight,mazeArray,cellsSizeStyle);
+    var mazeJson = printResults(mazeWidth,mazeHeight,mazeArray,cellsSizeStyle);
 
     $("#download-json").click(function(){
         downloadJson(mazeJson)
@@ -214,5 +225,15 @@ $(document).ready(function () {
     });
     $("#upload-json").click(function(){
         uploadJson(cellsSizeStyle);
+    });
+
+    $("#options-viewport").click(function() {
+        printResults(mazeWidth,mazeHeight,mazeArray,cellsSizeStyle);
+    });
+    $("#generate-maze").click(function(){
+        mazeWidth = Number($("#options-width").val());
+        mazeHeight = Number($("#options-height").val());
+        mazeArray = generateMaze(mazeWidth,mazeHeight);
+        mazeJson = printResults(mazeWidth,mazeHeight,mazeArray,cellsSizeStyle);
     });
 });

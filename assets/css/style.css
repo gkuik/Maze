@@ -24,7 +24,27 @@ body{
 
 .action-container {
     border: 1px solid lightgray;
-    width: 25%;
     margin: 1em;
     padding: 0 0.5em;
+}
+.action-container textarea,
+.action-container input[type="text"],
+.action-container input[type="number"],
+.action-container fieldset{
+    width: 100%;
+}
+
+.panel{
+    width: 22vw;
+    background-color: white;
+    position: absolute;
+    top: 0;
+}
+
+.panel-left {
+    left: 0;
+}
+
+.panel-right {
+    right: 0;
 }
