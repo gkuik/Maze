@@ -1,90 +1,174 @@
-var maze = new Array();
-var result = "";
+/**
+ * Generates a maze
+ *
+ * @param mazeWidth
+ * @param mazeHeight
+ * @returns {Array} : an array of cells with down and right parameters
+ */
+function generateMaze(mazeWidth, mazeHeight) {
+    var nbCells = mazeWidth * mazeHeight;
 
-var mazeWidth = 30;
-var mazeHeight = 30;
-var cellsSize = 20;
+    var maze = new Array();
 
-var nbCells = mazeWidth * mazeHeight;
+    for (var i = 0; i < nbCells; i++) {
+        maze.push({
+            down: true,
+            right: true
+        });
+    }
+
+    for (var i = 0; i < nbCells; i++) {
 
 
-for (var i = 0; i < nbCells; i++) {
-    maze.push({
-        id: i + 1,
-        down: true,
-        right: true
-    })
+        switch (Math.floor(Math.random() * (4 - 1 + 1)) + 1) {
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+        }
+
+
+        if (i >= mazeWidth) {
+            var n = i - mazeWidth;
+            var s = i + mazeWidth;
+            var e = i + 1;
+            var w = i - 1;
+        }
+
+        var border = Math.random() < 0.5 ? "down" : "right";
+        if (border == "down") {
+            maze[i]["down"] = false;
+            maze[i]["right"] = true;
+        }
+        if (border == "right") {
+            maze[i]["down"] = true;
+            maze[i]["right"] = false;
+        }
+
+    }
+
+    return maze;
+}
+
+/**
+ * Prints the maze in html table and returns json
+ *
+ * @param mazeWidth
+ * @param mazeHeight
+ * @param maze (Array) : an array of cells with down and right parameters
+ * @returns (String) : a json representation of the maze
+ */
+function printResults(mazeWidth, mazeHeight, maze){
+    var result = "";
+
+    result += "<table>";
+    for (var r = 0; r < mazeHeight; r++) {
+        result += "<tr>";
+        for (var c = mazeWidth * r; c < (mazeWidth * r) + mazeWidth; c++) {
+            result += "<td style='";
+            if (maze[c]["down"] == true) result += "border-bottom: 1px solid black; ";
+            if (maze[c]["right"] == true) result += "border-right: 1px solid black; ";
+            result += "'>";
+            result += c;
+            result += "</td>";
+        }
+        result += "</tr>";
+    }
+    result += "</table>";
+
+    // Show maze
+    $("#maze").html(result);
+    // Return json string
+    return exportJson(mazeWidth, mazeHeight, maze);
+}
+
+/**
+ * Constructs json file with maze parameters
+ *
+ * @param mazeWidth
+ * @param mazeHeight
+ * @param maze (Array) : an array of cells with down and right parameters
+ * @returns (String) : a json representation of the maze
+ */
+function exportJson(mazeWidth, mazeHeight, maze){
+    var jsonExport = {};
+
+    jsonExport['cells'] = maze;
+    jsonExport['height'] = mazeHeight;
+    jsonExport['width'] = mazeWidth;
+    var jsonExportString = JSON.stringify(jsonExport);
+
+    $("#export").val(jsonExportString);
+
+    return jsonExportString;
+}
+
+/**
+ * Downloads json file with timestamp
+ *
+ * @param jsonExportString
+ */
+function downloadJson(jsonExportString){
+    var date = new Date();
+    var fyr = date.getFullYear();
+    var mth = date.getMonth();
+    var day = date.getDate();
+    var hrs = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+    var filename = "maze_" + fyr + "-" + mth + "-" + day + "_" + hrs + "h" + min + "m" + sec + "s" + ".json";
+    download(jsonExportString, filename ,'application/json');
+}
+
+/**
+ * Download tool
+ *
+ * @param content
+ * @param filename
+ * @param contentType
+ */
+function download(content, filename, contentType)
+{
+    if(!contentType) contentType = 'application/octet-stream';
+    var a = document.createElement('a');
+    var blob = new Blob([content], {'type':contentType});
+    a.href = window.URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
 }
 
 
-for (var i = 0; i < nbCells; i++) {
 
+$(document).ready(function () {
+    var cellsSizeStyle = 20;
+    var mazeWith = 30;
+    var mazeHeight = 30;
 
-    switch (Math.floor(Math.random() * (4 - 1 + 1)) + 1) {
-        case 1:
+    // Generate a new maze
+    var mazeArray = generateMaze(mazeWith,mazeHeight);
 
-            break;
-        case 2:
+    // Prints results and get json representation
+    var mazeJson = printResults(mazeWith,mazeHeight,mazeArray);
 
-            break;
-        case 3:
+    $("#download-export").click(function(){downloadJson(mazeJson)});
 
-            break;
-        case 4:
-
-            break;
-    }
-
-
-    if (i >= mazeWidth) {
-        var n = i - mazeWidth;
-        var s = i + mazeWidth;
-        var e = i + 1;
-        var w = i - 1;
-    }
-
-    var border = Math.random() < 0.5 ? "down" : "right";
-    if (border == "down") {
-        maze[i]["down"] = false;
-        maze[i]["right"] = true;
-    }
-    if (border == "right") {
-        maze[i]["down"] = true;
-        maze[i]["right"] = false;
-    }
-
-}
-
-
-result += "<table>";
-for (var r = 0; r < mazeHeight; r++) {
-    result += "<tr>";
-    for (var c = mazeWidth * r; c < (mazeWidth * r) + mazeWidth; c++) {
-        result += "<td style='";
-        if (maze[c]["down"] == true) result += "border-bottom: 1px solid black; ";
-        if (maze[c]["right"] == true) result += "border-right: 1px solid black; ";
-        result += "'>";
-
-        result += maze[c]["id"];
-
-        result += "</td>";
-    }
-    result += "</tr>";
-}
-result += "</table>";
-
-
-$("#maze").html(result);
-
-
-$("#maze table").css({
-    "table-layout": "fixed",
-    "border-collapse": "collapse",
-    "border": "1px solid black"
-});
-$("#maze table td").css({
-    "position": "relative",
-    "overflow": "hidden",
-    "width": cellsSize + "px",
-    "height": cellsSize + "px"
+    $("#maze table").css({
+        "table-layout": "fixed",
+        "border-collapse": "collapse",
+        "border": "1px solid black"
+    });
+    $("#maze table td").css({
+        "position": "relative",
+        "overflow": "hidden",
+        "width": cellsSizeStyle + "px",
+        "height": cellsSizeStyle + "px"
+    });
 });
