@@ -8,51 +8,86 @@
 function generateMaze(mazeWidth, mazeHeight) {
     var nbCells = mazeWidth * mazeHeight;
 
-    var maze = new Array();
+    var maze = [];
 
     for (var i = 0; i < nbCells; i++) {
         maze.push({
+            id: i,
             down: true,
-            right: true
+            right: true,
+            visited: false
         });
     }
 
-    for (var i = 0; i < nbCells; i++) {
+    var open = 0;
+    while (open < nbCells -1) {
 
+        //var t = Math.floor(Math.random() * (nbCells-1 + 1));
+        var t = open;
 
-        switch (Math.floor(Math.random() * (4 - 1 + 1)) + 1) {
-            case 1:
+        if (!maze[t]["visited"]){
 
-                break;
-            case 2:
+            var current = maze[t];
+            current["visited"] = true;
 
-                break;
-            case 3:
+            var nord;
+            var sud;
+            var est;
+            var ouest;
 
-                break;
-            case 4:
+            if (maze[t - mazeWidth] != null) nord = maze[t - mazeWidth];
+            else nord = null;
+            if (maze[t + mazeWidth] != null) sud = maze[t + mazeWidth];
+            else sud = null;
+            if ((t) % (mazeWidth) < (t + 1) % (mazeWidth)) est = maze[t + 1];
+            else est = null;
+            if ((t) % (mazeWidth) > (t - 1) % (mazeWidth) && t - 1 >= 0) ouest = maze[t - 1];
+            else ouest = null;
 
-                break;
+            var yolo = [];
+            if (nord != null && nord["id"] != current["id"]) yolo.push("nord");
+            if (sud != null && sud["id"] != current["id"]) yolo.push("sud");
+            if (est != null && est["id"] != current["id"]) yolo.push("est");
+            if (ouest != null && ouest["id"] != current["id"]) yolo.push("ouest");
+
+            var dir = yolo[Math.floor(Math.random() * (yolo.length))];
+            switch (dir){
+                case "nord":
+                    nord["down"] = false;
+                    replace(nord["id"], current["id"]);
+                    break;
+                case "sud":
+                    current["down"] = false;
+                    replace(sud["id"], current["id"]);
+                    break;
+                case "est":
+                    current["right"] = false;
+                    replace(est["id"], current["id"]);
+                    break;
+                case "ouest":
+                    ouest["right"] = false;
+                    replace(ouest["id"], current["id"]);
+                    break;
+            }
+
+            function replace(target, current){
+                var tar = IndexOfObject(maze,target,"id");
+                while(tar > -1){
+                    maze[tar]["id"] = current;
+                    tar = IndexOfObject(maze,target,"id");
+                }
+            }
+
+            open += 1;
         }
 
+    }
 
-        if (i >= mazeWidth) {
-            var n = i - mazeWidth;
-            var s = i + mazeWidth;
-            var e = i + 1;
-            var w = i - 1;
+    function IndexOfObject(Array, searchTerm, property) {
+        for(var i = 0, len = Array.length; i < len; i++) {
+            if (Array[i][property] === searchTerm) return i;
         }
-
-        var border = Math.random() < 0.5 ? "down" : "right";
-        if (border == "down") {
-            maze[i]["down"] = false;
-            maze[i]["right"] = true;
-        }
-        if (border == "right") {
-            maze[i]["down"] = true;
-            maze[i]["right"] = false;
-        }
-
+        return -1;
     }
 
     return maze;
@@ -66,7 +101,8 @@ function generateMaze(mazeWidth, mazeHeight) {
  * @param maze (Array) : an array of cells with down and right parameters
  * @returns (String) : a json representation of the maze
  */
-function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle){
+function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle) {
+
     var result = "";
     var adapt = $('#options-viewport').is(':checked');
 
@@ -78,7 +114,6 @@ function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle){
             if (maze[c]["down"] == true) result += "border-bottom: 1px solid black; ";
             if (maze[c]["right"] == true) result += "border-right: 1px solid black; ";
             result += "'>";
-            result += c;
             result += "</td>";
         }
         result += "</tr>";
@@ -91,15 +126,16 @@ function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle){
     $("#maze table").css({
         "table-layout": "fixed",
         "border-collapse": "collapse",
-        "border": "1px solid black"
+        "border-left": "1px solid black",
+        "border-top": "1px solid black"
     });
 
-    if(adapt == true) {
+    if (adapt == true) {
         $("#maze table td").css({
             "position": "relative",
             "overflow": "hidden",
-            "width": 50/mazeWidth + "vw",
-            "lineHeight": 50/mazeHeight*1.5 + "vh"
+            "width": 50 / mazeWidth + "vw",
+            "lineHeight": 50 / mazeHeight * 1.5 + "vh"
         });
     } else {
         $("#maze table td").css({
@@ -122,7 +158,7 @@ function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle){
  * @param maze (Array) : an array of cells with down and right parameters
  * @returns (String) : a json representation of the maze
  */
-function exportJson(mazeWidth, mazeHeight, maze){
+function exportJson(mazeWidth, mazeHeight, maze) {
     var jsonExport = {};
 
     jsonExport['cells'] = maze;
@@ -140,7 +176,7 @@ function exportJson(mazeWidth, mazeHeight, maze){
  *
  * @param jsonExportString
  */
-function downloadJson(jsonExportString){
+function downloadJson(jsonExportString) {
     var date = new Date();
     var fyr = date.getFullYear();
     var mth = date.getMonth();
@@ -149,7 +185,7 @@ function downloadJson(jsonExportString){
     var min = date.getMinutes();
     var sec = date.getSeconds();
     var filename = "maze_" + fyr + "-" + mth + "-" + day + "_" + hrs + "h" + min + "m" + sec + "s" + ".json";
-    download(jsonExportString, filename ,'application/json');
+    download(jsonExportString, filename, 'application/json');
 }
 
 /**
@@ -158,9 +194,9 @@ function downloadJson(jsonExportString){
  * @param jsonImportString
  * @param cellsSizeStyle
  */
-function importJson(jsonImportString,cellsSizeStyle){
+function importJson(jsonImportString, cellsSizeStyle) {
     var mazeJson = JSON.parse(jsonImportString);
-    return printResults(mazeJson['width'], mazeJson['height'], mazeJson['cells'],cellsSizeStyle);
+    return printResults(mazeJson['width'], mazeJson['height'], mazeJson['cells'], cellsSizeStyle);
 }
 
 /**
@@ -168,18 +204,15 @@ function importJson(jsonImportString,cellsSizeStyle){
  *
  * @param cellsSizeStyle
  */
-function uploadJson(cellsSizeStyle)
-{
+function uploadJson(cellsSizeStyle) {
     var file = document.getElementById('file-upload');
 
-    if(file.files.length)
-    {
+    if (file.files.length) {
         var reader = new FileReader();
 
-        reader.onload = function(e)
-        {
+        reader.onload = function (e) {
             document.getElementById('import').innerHTML = e.target.result;
-            importJson(e.target.result,cellsSizeStyle);
+            importJson(e.target.result, cellsSizeStyle);
         };
 
         reader.readAsBinaryString(file.files[0]);
@@ -194,11 +227,10 @@ function uploadJson(cellsSizeStyle)
  * @param filename
  * @param contentType
  */
-function download(content, filename, contentType)
-{
-    if(!contentType) contentType = 'application/octet-stream';
+function download(content, filename, contentType) {
+    if (!contentType) contentType = 'application/octet-stream';
     var a = document.createElement('a');
-    var blob = new Blob([content], {'type':contentType});
+    var blob = new Blob([content], {'type': contentType});
     a.href = window.URL.createObjectURL(blob);
     a.download = filename;
     a.click();
@@ -211,29 +243,29 @@ $(document).ready(function () {
     var mazeHeight = 30;
 
     // Generate a new maze
-    var mazeArray = generateMaze(mazeWidth,mazeHeight);
+    var mazeArray = generateMaze(mazeWidth, mazeHeight);
 
     // Prints results and get json representation
-    var mazeJson = printResults(mazeWidth,mazeHeight,mazeArray,cellsSizeStyle);
+    var mazeJson = printResults(mazeWidth, mazeHeight, mazeArray, cellsSizeStyle);
 
-    $("#download-json").click(function(){
+    $("#download-json").click(function () {
         downloadJson(mazeJson)
     });
-    $("#import-json").click(function(){
+    $("#import-json").click(function () {
         var jsonStringToImport = $("#import").val();
-        importJson(jsonStringToImport,cellsSizeStyle);
+        importJson(jsonStringToImport, cellsSizeStyle);
     });
-    $("#upload-json").click(function(){
+    $("#upload-json").click(function () {
         uploadJson(cellsSizeStyle);
     });
 
-    $("#options-viewport").click(function() {
-        printResults(mazeWidth,mazeHeight,mazeArray,cellsSizeStyle);
+    $("#options-viewport").click(function () {
+        printResults(mazeWidth, mazeHeight, mazeArray, cellsSizeStyle);
     });
-    $("#generate-maze").click(function(){
+    $("#generate-maze").click(function () {
         mazeWidth = Number($("#options-width").val());
         mazeHeight = Number($("#options-height").val());
-        mazeArray = generateMaze(mazeWidth,mazeHeight);
-        mazeJson = printResults(mazeWidth,mazeHeight,mazeArray,cellsSizeStyle);
+        mazeArray = generateMaze(mazeWidth, mazeHeight);
+        mazeJson = printResults(mazeWidth, mazeHeight, mazeArray, cellsSizeStyle);
     });
 });
