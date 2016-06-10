@@ -90,6 +90,11 @@ function generateMaze(mazeWidth, mazeHeight) {
         return -1;
     }
 
+    for (var i = 0; i < maze.length; i++){
+        delete maze[i]["visited"];
+        delete maze[i]["id"];
+    }
+
     return maze;
 }
 
