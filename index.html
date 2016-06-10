@@ -5,13 +5,19 @@
     <title>Maze</title>
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="twoD">
 
 <div id="maze"></div>
 <div id="container"></div>
 
 
 <div class="panel panel-left">
+    <div class="action-container" id="rendering-container">
+        <h3>Rendering : </h3>
+        <label for="options-rendering">3D (JSON import and custom size maze disabled)</label>
+        <input id="options-rendering" type="checkbox">
+    </div>
+
     <div class="action-container" id="export-container">
         <h3>Export maze : </h3>
         <textarea id="export"></textarea>

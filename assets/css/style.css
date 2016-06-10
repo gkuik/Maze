@@ -7,6 +7,22 @@ body{
     padding: 0;
     margin: 0;
     font-family: sans-serif;
+}
+body.threeD{
+    background-color: black;
+    overflow-x: hidden;
+}
+
+body.twoD #maze{
+    font-family: serif;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+body.twoD #maze table tr td{
+    font-size: 10px;
+    text-align: center;
     overflow: hidden;
 }
 
@@ -24,13 +40,18 @@ body{
 
 .panel{
     width: 22vw;
-    /*background-color: white;*/
-    color: #FFF;
+
     position: absolute;
     top: 0;
+}
+body.twoD .panel{
+    background-color: white;
+}
+body.threeD .panel{
+    color: #FFF;
     opacity: 0.2;
 }
-.panel:hover{
+body.threeD .panel:hover{
     opacity: 1;
 }
 
