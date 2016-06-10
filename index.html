@@ -8,6 +8,8 @@
 <body>
 
 <div id="maze"></div>
+<div id="container"></div>
+
 
 <div class="panel panel-left">
     <div class="action-container" id="export-container">
@@ -56,9 +58,39 @@
         <p><button id="solve-maze" disabled><s>Solve Maze</s></button></p>
     </div>
 
+    <div class="action-container" id="solve-container">
+        <h3>Camera :</h3>
+        <form>
+            <fieldset>
+                <legend>Translate</legend>
+                <label for="3D-cameraX">X :</label>
+                <input id="3D-cameraX" type="range" value="30"><br>
+
+                <label for="3D-cameraY">Y :</label>
+                <input id="3D-cameraY" type="range" value="30"><br>
+
+                <label for="3D-cameraZ">Z :</label>
+                <input id="3D-cameraZ" type="range" value="10">
+            </fieldset>
+            <fieldset>
+                <legend>Rotate</legend>
+                <label for="3D-cameraRotateX">X :</label>
+                <input id="3D-cameraRotateX" type="range" value="0"><br>
+
+                <label for="3D-cameraRotateY">Y :</label>
+                <input id="3D-cameraRotateY" type="range" value="0"><br>
+
+                <label for="3D-cameraRotateZ">Z :</label>
+                <input id="3D-cameraRotateZ" type="range" value="0">
+            </fieldset>
+            <p><button disabled type="button">Generate Maze</button></p>
+        </form>
+    </div>
+
 </div>
 
 <script src="assets/js/jquery-2.2.4.min.js"></script>
+<script src="assets/js/three.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

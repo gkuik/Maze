@@ -7,18 +7,6 @@ body{
     padding: 0;
     margin: 0;
     font-family: sans-serif;
-}
-
-#maze{
-    font-family: serif;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-#maze table tr td{
-    font-size: 10px;
-    text-align: center;
     overflow: hidden;
 }
 
@@ -36,9 +24,14 @@ body{
 
 .panel{
     width: 22vw;
-    background-color: white;
+    /*background-color: white;*/
+    color: #FFF;
     position: absolute;
     top: 0;
+    opacity: 0.2;
+}
+.panel:hover{
+    opacity: 1;
 }
 
 .panel-left {

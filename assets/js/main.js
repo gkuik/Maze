@@ -108,50 +108,94 @@ function generateMaze(mazeWidth, mazeHeight) {
  */
 function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle) {
 
-    var result = "";
-    var adapt = $('#options-viewport').is(':checked');
 
-    result += "<table>";
-    for (var r = 0; r < mazeHeight; r++) {
-        result += "<tr>";
-        for (var c = mazeWidth * r; c < (mazeWidth * r) + mazeWidth; c++) {
-            result += "<td style='";
-            if (maze[c]["down"] == true) result += "border-bottom: 1px solid black; ";
-            if (maze[c]["right"] == true) result += "border-right: 1px solid black; ";
-            result += "'>";
-            result += "</td>";
+    var renderer, scene, camera, mesh;
+
+    init();
+
+    function init(){
+        // on initialise le moteur de rendu
+        renderer = new THREE.WebGLRenderer();
+
+        // si WebGL ne fonctionne pas sur votre navigateur vous pouvez utiliser le moteur de rendu Canvas à la place
+        // renderer = new THREE.CanvasRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // on initialise la scène
+        scene = new THREE.Scene();
+
+        // on initialise la camera que l’on place ensuite sur la scène
+        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.set(0, 0, 1000);
+        scene.add(camera);
+
+        var light = new THREE.DirectionalLight( 0xffffaa, 1 );
+        light.position.set( 100, 100, 100 ).normalize();
+        scene.add( light );
+
+        var id = 0;
+        for (var i = 0; i < mazeHeight; i++){
+            var geometry = new THREE.BoxGeometry( cellsSizeStyle/4, cellsSizeStyle, cellsSizeStyle );
+            var material = new THREE.MeshPhongMaterial( { color: 0x00ff00, wireframe: true } );
+            mesh = new THREE.Mesh( geometry, material );
+            mesh.position.setX(-cellsSizeStyle);
+            mesh.position.setY((cellsSizeStyle*i));
+            scene.add( mesh );
+            for (var ii = 0; ii < mazeWidth; ii++){
+                if (maze[id]["right"] == true){
+                    var geometry = new THREE.BoxGeometry( cellsSizeStyle/4, cellsSizeStyle, cellsSizeStyle );
+                    var material = new THREE.MeshPhongMaterial( { color: 0x00ff00, wireframe: true } );
+                    mesh = new THREE.Mesh( geometry, material );
+                    mesh.position.setX((cellsSizeStyle*ii));
+                    mesh.position.setY((cellsSizeStyle*i));
+                    scene.add( mesh );
+                }
+                if (maze[id]["down"] == true){
+                    var geometry = new THREE.BoxGeometry( cellsSizeStyle, cellsSizeStyle/4, cellsSizeStyle );
+                    var material = new THREE.MeshPhongMaterial( { color: 0x00ff00, wireframe: true } );
+                    mesh = new THREE.Mesh( geometry, material );
+                    mesh.position.setX((cellsSizeStyle*ii)-10);
+                    mesh.position.setY((cellsSizeStyle*i)+10);
+                    scene.add( mesh );
+                }
+                id++;
+            }
         }
-        result += "</tr>";
+
+        for (var iii = 0; iii < mazeWidth; iii++){
+            var geometry = new THREE.BoxGeometry( cellsSizeStyle, cellsSizeStyle/4, cellsSizeStyle );
+            var material = new THREE.MeshPhongMaterial( { color: 0x00ff00, wireframe: true } );
+            mesh = new THREE.Mesh( geometry, material );
+            mesh.position.setX((cellsSizeStyle*iii)-(cellsSizeStyle/2));
+            mesh.position.setY(-(cellsSizeStyle/2));
+            scene.add( mesh );
+        }
+
+        var startPosition = new THREE.Vector3( 0, 1000, 1000 );
+
+        var render = function () {
+
+
+            requestAnimationFrame( render );
+
+            camera.position.set( startPosition.x, startPosition.y, startPosition.z );
+
+            camera.position.x = ($("#3D-cameraX").val())*10;
+            camera.position.y = ($("#3D-cameraY").val())*10;
+            camera.position.z = ($("#3D-cameraZ").val())*100;
+
+            camera.rotation.x = $("#3D-cameraRotateX").val()/100;
+            camera.rotation.y = $("#3D-cameraRotateY").val()/100;
+            camera.rotation.z = $("#3D-cameraRotateZ").val()/100;
+
+            renderer.render( scene, camera );
+        };
+
+        render();
+
     }
-    result += "</table>";
 
-    // Show maze
-    $("#maze").html(result);
-
-    $("#maze table").css({
-        "table-layout": "fixed",
-        "border-collapse": "collapse",
-        "border-left": "1px solid black",
-        "border-top": "1px solid black"
-    });
-
-    if (adapt == true) {
-        $("#maze table td").css({
-            "position": "relative",
-            "overflow": "hidden",
-            "width": 50 / mazeWidth + "vw",
-            "lineHeight": 50 / mazeHeight * 1.5 + "vh"
-        });
-    } else {
-        $("#maze table td").css({
-            "position": "relative",
-            "overflow": "hidden",
-            "width": cellsSizeStyle + "px",
-            "height": cellsSizeStyle + "px"
-        });
-    }
-
-    // Return json string
     return exportJson(mazeWidth, mazeHeight, maze);
 }
 
