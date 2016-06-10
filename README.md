@@ -4,6 +4,9 @@ Générateur et solveur de labyrinthe
 
 ####Demo : http://gkuik.github.io/Maze/
 
+##1. Generation
+*Geoffrey :* Pour la génération du labyrinthe, j’ai choisi l’algorithme de fusion aléatoire des chemins. Cette méthode est certes plus difficile à mettre en œuvre, mais elle permet d’obtenir un chemin plus complexe.
+
 ##2. Solution
 *Enguerran :* L'idée était d'utiliser une librarie contenant plusieurs algorithmes résoveurs de labyrinthe afin de les comparer (A*, Dijkstra, BestFirst, Tremaux...) comme [PathFinding.js](https://github.com/qiao/PathFinding.js) qui semblait idéeale ou celle de [primaryobjects](https://github.com/primaryobjects/maze) qui compare Tremaux et A*.
 
@@ -36,3 +39,6 @@ var matrix = [
 ]
 ```
 Or après tentatives, je n'ai malheuresement pas réussi à effectuer cette tranformation dans le temps imparti.
+
+##3. 3D
+*Geoffrey :* Pour la 3D, j’ai utilisé la librairie **three.js**. Comme je n’avais jamais utilisé cette librairie, je me suis contenté de l’affichage.
