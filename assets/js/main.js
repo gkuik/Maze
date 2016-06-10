@@ -98,6 +98,47 @@ function generateMaze(mazeWidth, mazeHeight) {
     return maze;
 }
 
+
+function solveMaze(maze, mazeWidth, mazeHeight) {
+    var matrixMaze = [];
+    //mazeWidth = mazeWidth*2;
+    //mazeHeight = mazeHeight*2;
+
+    for (var r = 0; r < mazeHeight; r++) {
+        for (var c = mazeWidth * r; c < (mazeWidth * r) + mazeWidth; c++) {
+            matrixMaze.push(0); //current cell
+            if (maze[c]["down"] == "true") {
+                matrixMaze.push(1); //append door to right (1)
+            } else {
+                matrixMaze.push(0); //append gap to right (0)
+            }
+        }
+
+    }
+
+
+    function listToMatrix(list, elementsPerSubArray) {
+        var matrix = [], i, k;
+
+        for (i = 0, k = -1; i < list.length; i++) {
+            if (i % elementsPerSubArray === 0) {
+                k++;
+                matrix[k] = [];
+            }
+
+            matrix[k].push(list[i]);
+        }
+
+        return matrix;
+    }
+
+    console.log("temp");
+    console.table(matrixMaze);
+    console.log("maze");
+    console.table(listToMatrix(matrixMaze,mazeWidth));
+}
+
+
 /**
  * Prints the maze in html table and returns json
  *
@@ -196,6 +237,7 @@ function printResults(mazeWidth, mazeHeight, maze, cellsSizeStyle) {
 
     }
 
+    // Return json string
     return exportJson(mazeWidth, mazeHeight, maze);
 }
 
@@ -317,4 +359,7 @@ $(document).ready(function () {
         mazeArray = generateMaze(mazeWidth, mazeHeight);
         mazeJson = printResults(mazeWidth, mazeHeight, mazeArray, cellsSizeStyle);
     });
+    //$("#solve-maze").click(function () {
+    //    solveMaze(mazeArray, mazeWidth, mazeHeight);
+    //});
 });

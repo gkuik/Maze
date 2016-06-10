@@ -1,0 +1,26 @@
+{
+  "name": "maze",
+  "version": "0.1.0",
+  "description": "Générateur et solveur de labyrinthe",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gkuik/Maze.git"
+  },
+  "contributors": [
+    "Geoffrey KUIK <geoffrey.kuik@gmail.com>",
+    "Enguerran POULAIN <contact@epoulain.fr>"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gkuik/Maze/issues"
+  },
+  "homepage": "https://github.com/gkuik/Maze#readme",
+  "private": true,
+  "dependencies": {
+    "pathfinding": "^0.4.18"
+  }
+}
